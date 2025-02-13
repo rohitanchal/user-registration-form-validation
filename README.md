@@ -28,7 +28,7 @@ A simple user registration system that provides live password validation using H
    ```
 2. Navigate to the project folder:
    ```sh
-   cd user-registration-live-validation
+   cd user-registration-form-validation
    ```
 3. Open `index.html` in a web browser.
 
