@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .error { color: red; font-size: 14px; }
+        .success { color: green; font-size: 14px; }
+        .password-guidelines { list-style: none; padding: 0; }
+        .password-guidelines li { color: red; }
+        .valid { color: green; }
+    </style>
+</head>
+<body class="px-5">
+    <div class="container px-5">
+        <h2 class="my-4">User Registration</h2>
+        <form id="registerForm" class="card p-4 shadow">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="text" id="email" name="email" class="form-control" required>
+                <span id="emailError" class="error"></span>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+                <span id="passwordError" class="error"></span>
+                <ul class="password-guidelines mt-2">
+                    <li id="length">❌ At least 8 characters</li>
+                    <li id="uppercase">❌ At least one uppercase letter</li>
+                    <li id="lowercase">❌ At least one lowercase letter</li>
+                    <li id="number">❌ At least one number</li>
+                    <li id="special">❌ At least one special character (@$!%*?&)</li>
+                </ul>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Register</button>
+        </form>
+
+        <h3 class="mt-4">Registered Users</h3>
+        <ul id="userList" class="list-group mt-3"></ul>
+    </div>
+
+    <script>
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
+        const emailError = document.getElementById("emailError");
+        const passwordError = document.getElementById("passwordError");
+        const form = document.getElementById("registerForm");
+        const userList = document.getElementById("userList");
+        
+        const lengthCriteria = document.getElementById("length");
+        const uppercaseCriteria = document.getElementById("uppercase");
+        const lowercaseCriteria = document.getElementById("lowercase");
+        const numberCriteria = document.getElementById("number");
+        const specialCriteria = document.getElementById("special");
+
+        function isValidEmail(email) {
+            const emailRegex = /^[a-zA-Z0-9][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            return emailRegex.test(email);
+        }
+
+        function validatePassword(password) {
+            lengthCriteria.innerHTML = password.length >= 8 ? "✅ At least 8 characters" : "❌ At least 8 characters";
+            uppercaseCriteria.innerHTML = /[A-Z]/.test(password) ? "✅ At least one uppercase letter" : "❌ At least one uppercase letter";
+            lowercaseCriteria.innerHTML = /[a-z]/.test(password) ? "✅ At least one lowercase letter" : "❌ At least one lowercase letter";
+            numberCriteria.innerHTML = /\d/.test(password) ? "✅ At least one number" : "❌ At least one number";
+            specialCriteria.innerHTML = /[@$!%*?&]/.test(password) ? "✅ At least one special character (@$!%*?&)" : "❌ At least one special character (@$!%*?&)";
+
+            return password.length >= 8 && /[A-Z]/.test(password) && /[a-z]/.test(password) && /\d/.test(password) && /[@$!%*?&]/.test(password);
+        }
+
+        function loadUsers() {
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+            userList.innerHTML = "";
+            users.forEach(user => {
+                const newUserItem = document.createElement("li");
+                newUserItem.classList.add("list-group-item");
+                newUserItem.textContent = user;
+                userList.appendChild(newUserItem);
+            });
+        }
+
+        emailInput.addEventListener("input", () => {
+            emailError.textContent = isValidEmail(emailInput.value) ? "" : "Invalid email format";
+        });
+
+        passwordInput.addEventListener("input", () => {
+            validatePassword(passwordInput.value);
+        });
+
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            
+            if (!isValidEmail(emailInput.value)) {
+                emailError.textContent = "Invalid email format";
+                return;
+            }
+            
+            if (!validatePassword(passwordInput.value)) {
+                passwordError.textContent = "Password does not meet requirements";
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+            users.push(emailInput.value);
+            localStorage.setItem("users", JSON.stringify(users));
+
+            loadUsers();
+
+            alert("Registration Successful!");
+            form.reset();
+            validatePassword("");
+        });
+
+        document.addEventListener("DOMContentLoaded", loadUsers);
+    </script>
+</body>
+</html>
