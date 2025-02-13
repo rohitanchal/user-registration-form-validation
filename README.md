@@ -24,7 +24,7 @@ A simple user registration system that provides live password validation using H
 ## Installation & Usage
 1. Clone the repository:
    ```sh
-   git clone https://github.com/rohitanchal/user-registration-live-validation.git
+   git clone https://github.com/rohitanchal/user-registration-form-validation.git
    ```
 2. Navigate to the project folder:
    ```sh
