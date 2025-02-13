@@ -1,4 +1,4 @@
-# User Registration with Live Validation
+# User Registration Form with Live Validation
 
 ## Description
 A simple user registration system that provides live password validation using HTML, JavaScript, and Bootstrap. It ensures that users meet all password security requirements before registration and stores registered users in `localStorage`, allowing them to persist even after a page refresh.
